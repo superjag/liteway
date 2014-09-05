@@ -48,10 +48,9 @@
  *
 --]]
 
-bionix.rng = {}
-bionix.rng.__index = bionix.rng
+__index = isaac
  
-function bionix.rng.create(initialSeed)
+function create(initialSeed)
  local rng = {}
  setmetatable(rng,bionix.rng)
  

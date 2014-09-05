@@ -1,7 +1,4 @@
 --name liteway
-if fs.getName(shell.getRunningProgram())~="liteway" then
- error('Liteway o.s. file must be named "liteway"')
-end
 
 -- Always load as API
 if shell then
