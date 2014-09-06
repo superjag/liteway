@@ -16,7 +16,7 @@ end
 getfenv().liteway = {}
 
 -- Version information
-liteway.versionName = "Liteway 1.0 by John_Clarkson"
+liteway.versionName = "Liteway 1.0"
 liteway.version = 1.0
  
 -- Temporary storage space for use by apps. Data persists across app restarts, but is deleted when the computer restarts.
@@ -97,7 +97,8 @@ end
 
 local libs = {
  "backgroundevents",
- "stringfunctions"
+ "stringfunctions",
+ "programs/turtlescript"
 }
 
 for i = 1, #libs, 1 do

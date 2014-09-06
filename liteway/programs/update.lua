@@ -28,7 +28,9 @@ while line~=nil do
   end
   updateURL = line:sub(14, line:len())
  elseif line:sub(1, 17)=="--update-command " then
-  
+  if not updateURL then
+   
+  end
  elseif line:sub(1, 16)=="--external-file " then
   
  end

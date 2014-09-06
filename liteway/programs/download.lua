@@ -52,9 +52,20 @@ if (not hasFilename) and fileContents:sub(1, 7) == "--name " and fileContents:su
   end
   i = i + 1
  end
- print("Saving as "..filename)
+end
+
+if file.exists(filename) then
+ if not hasFilename then
+  print("Saving as "..filename)
+ end
+ print("Error: File already exists")
+ return
 end
 
 local file = fs.open(shell.resolve(filename), "w")
 file.write(fileContents)
 file.close()
+
+if not hasFilename then
+ print("Saved as "..filename)
+end
