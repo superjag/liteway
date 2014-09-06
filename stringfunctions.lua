@@ -80,7 +80,8 @@ string.split = function (str, sep, max)
  
  local i = 0
  local prev = 1
- while i = str:index(sep, prev) do
+ function seti(value) i = value end
+ while seti(str:index(sep, prev)) do
   
   if i==prev then
    result[#result+1] = ""
