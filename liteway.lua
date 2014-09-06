@@ -1,8 +1,8 @@
 --name liteway
 
--- Always load as API
-if shell then
- os.loadAPI(shell.getRunningProgram())
+-- Never load as API
+if not shell then
+ error("The Liteway API must be loaded with shell.run()")
  return
 end
 
@@ -11,46 +11,52 @@ if liteway then
  print(liteway.versionName.." is already running")
  return
 end
+ 
+-- Create the global liteway object
+getfenv().liteway = {}
 
 -- Version information
-versionName = "Liteway 1.0 by John_Clarkson"
-version = 1.0
+liteway.versionName = "Liteway 1.0 by John_Clarkson"
+liteway.version = 1.0
  
 -- Temporary storage space for use by apps. Data persists across app restarts, but is deleted when the computer restarts.
-temp = {}
-tmp = temp
+liteway.temp = {}
+liteway.tmp = liteway.temp
  
 -- Liteway main dir made available for those interested
-installDir = shell.getRunningProgram()
+local installDir = shell.getRunningProgram()
 installDir = installDir:sub(1,#installDir-#fs.getName(installDir))..""
+liteway.installDir = installDir
 
 -- Create the programs dir and add it to the shell path
-programsDir = fs.combine(installDir, "programs")
+local programsDir = fs.combine(installDir, "programs")
 shell.setPath(shell.path()..":"..programsDir)
 if not fs.exists(programsDir) then
  fs.makeDir(programsDir)
 end
+liteway.programsDir = programsDir
 
 --
 -- App settings files (for use by apps!)
 --
  
-settingsDir = fs.combine(installDir, "settings")
+local settingsDir = fs.combine(installDir, "settings")
 if not fs.exists(settingsDir) then
  fs.makeDir(settingsDir)
 end
+liteway.settingsDir = settingsDir
 
 -- Saves a string to the computer's filesystem so it can be loaded later with loadSettings().
 -- Always begin the name with the name of your app to prevent conflicts!
 -- e.g. liteway.saveSettings("myapp-settings", str)
-function saveSettings(name, str)
+liteway.saveSettings = function (name, str)
  local file = fs.open(fs.combine(settingsDir, filename),"w")
  file.write(str)
  file.close()
 end
 
 -- Returns a string saved with saveSettings(), or nil if no settings with that name exists.
-function loadSettings(name)
+liteway.loadSettings = function (name)
  local file = fs.open(fs.combine(settingsDir, filename),"r")
  local str = file.readAll()
  file.close()
@@ -58,7 +64,20 @@ function loadSettings(name)
 end
 
 --
+-- Load Additional Libraries
+--
+
+local libs = {
+ "backgroundevents",
+ "stringfunctions"
+}
+
+for i = 1, #libs, 1 do
+ shell.run(fs.combine(installDir, libs[i]))
+end
+
+--
 -- Done
 --
  
-print(versionName)
+print(liteway.versionName)
