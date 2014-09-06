@@ -1,5 +1,5 @@
 --[[
- * Ported by Jonathan A. Graef (a.k.a. John_Clarkson)
+ * Ported by Jonathan A. Graef (mc user John_Clarkson)
  * from isaac.js by Yves-Marie K. Rinquin, which is
  * licensed under the following terms:
  * ----------------------------------------------------------------------
@@ -48,11 +48,24 @@
  *
 --]]
 
-__index = isaac
+-- Never load as API
+if not shell then
+ error("The Isaac API must be loaded with shell.run()")
+ return
+end
+
+-- Only initialize once
+if isaac then
+ print("Isaac API is already loaded")
+ return
+end
+
+getfenv().isaac = {}
+isaac.__index = isaac
  
-function create(initialSeed)
+function isaac.create(initialSeed)
  local rng = {}
- setmetatable(rng,bionix.rng)
+ setmetatable(rng,isaac)
  
  -- internal states
  rng.m = {} -- internal memory
@@ -71,7 +84,7 @@ function create(initialSeed)
  return rng
 end
  
-function bionix.rng.stringToIntArray(s)
+function isaac.stringToIntArray(s)
  local i = 1
  local r = {}
  local l = s:len()
@@ -91,7 +104,7 @@ local function add(x,y)
 end
  
 -- initialization
-function bionix.rng:reset()
+function isaac:reset()
  local i
  self.acc = 0
  self.brs = 0
@@ -104,7 +117,7 @@ function bionix.rng:reset()
 end
  
 -- seeding function
-function bionix.rng:seed(s)
+function isaac:seed(s)
  local i
  local a = 0x9e3779b9 -- the golden ratio
  local b = 0x9e3779b9
@@ -116,7 +129,7 @@ function bionix.rng:seed(s)
  local h = 0x9e3779b9
  
  if type(s)=="string" then
-  s = bionix.rng.stringToIntArray(s)
+  s = isaac.stringToIntArray(s)
  elseif type(s)=="number" then
   s = {math.floor(s)}
  end
@@ -220,7 +233,7 @@ function bionix.rng:seed(s)
 end
  
 -- isaac generator, n = number of run
-function bionix.rng:prng(n)
+function isaac:prng(n)
  local i
  local x
  local y
@@ -257,7 +270,7 @@ function bionix.rng:prng(n)
 end
  
 -- return a random number between
-function bionix.rng:rand()
+function isaac:rand()
  self.gnt = self.gnt-1
  if self.gnt<0 then
   self:prng()
@@ -267,10 +280,10 @@ function bionix.rng:rand()
 end
  
 -- global rng for convenience
-local globalRng = bionix.rng.create()
+local globalRng = isaac.create()
  
 -- output
-function bionix.rng:random()
+function isaac:random()
  if self~=nil then
   return self:rand() * 2.3283064365386963e-10 -- 2^-32
  else

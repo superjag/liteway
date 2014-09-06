@@ -64,6 +64,34 @@ liteway.loadSettings = function (name)
 end
 
 --
+-- Function that tells you the filename portion of a url (very convenient!)
+--
+
+liteway.extractFilename = function (url)
+ 
+ local filename = tostring(url)
+ 
+ local index = filename:index("?")
+ if index then
+  filename = filename:sub(1, index-1)..""
+ end
+ 
+ index = filename:index("#")
+ if index then
+  filename = filename:sub(1, index-1)..""
+ end
+ 
+ while filename:index("/", -1)==filename:len() do
+  filename = filename:sub(1, filename:len()-1)..""
+ end
+ 
+ filename = filename:sub(filename:index("/", -1)+1, filename:len())..""
+ 
+ return filename
+ 
+end
+
+--
 -- Load Additional Libraries
 --
 
