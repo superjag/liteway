@@ -38,7 +38,7 @@ local shellPath = shell.path()
 for i = 1, shellPath:len(), 1 do
  if shellPath:sub(i, i)=="." and
   (i==shellPath:len() or shellPath:sub(i+1, i+1)==":") and
-  (i==1 or shellPath:sub(i-1, i-1)==".") then
+  (i==1 or shellPath:sub(i-1, i-1)==":") then
   if i==shellPath:len() then
    shell.setPath(shellPath..":"..programsDir)
   else
