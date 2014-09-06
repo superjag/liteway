@@ -27,11 +27,11 @@ while line~=nil do
    return
   end
   updateURL = line:sub(14, line:len())
- elseif line:sub(1, 17)=="--update-command " then
+ elseif line:sub(1, 17)=="--update-command " and line:len()>17 then
   if not updateURL then
-   
+   updateCommands[#updateCommands] = updateURL = line:sub(18, line:len())
   end
- elseif line:sub(1, 16)=="--external-file " then
+ elseif line:sub(1, 16)=="--external-file " and line:len()>16 then
   
  end
  line = file.readLine()

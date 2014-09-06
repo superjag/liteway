@@ -30,11 +30,23 @@ liteway.installDir = installDir
 
 -- Create the programs dir and add it to the shell path
 local programsDir = fs.combine(installDir, "programs")
-shell.setPath(shell.path()..":"..programsDir)
 if not fs.exists(programsDir) then
  fs.makeDir(programsDir)
 end
 liteway.programsDir = programsDir
+local shellPath = shell.path()
+for i = 1, shellPath:len(), 1 do
+ if shellPath:sub(i, i)=="." and
+  (i==shellPath:len() or shellPath:sub(i+1, i+1)==":") and
+  (i==1 or shellPath:sub(i-1, i-1)==".") then
+  if i==shellPath:len() then
+   shell.setPath(shellPath..":"..programsDir)
+  else
+   shell.setPath(shellPath:sub(1, i)..":"..programsDir..shellPath:sub(i+1, shellPath:len()))
+  end
+ end
+end
+
 
 --
 -- App settings files (for use by apps!)
@@ -108,5 +120,5 @@ end
 --
 -- Done
 --
- 
+
 print(liteway.versionName)

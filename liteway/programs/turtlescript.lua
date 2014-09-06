@@ -1,6 +1,6 @@
 --name turtlescript
 
-local version = "TurtleScript 0.2 by John_Clarkson"
+local version = "TurtleScript 0.2"
 local args = {...}
 local firstProgram = true
 
