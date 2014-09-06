@@ -1,0 +1,14 @@
+--name filename
+The requested filename for the file when downloaded. Must be on the first line of the file. Can be a relative or absolute path. %liteway% refers to the liteway install dir, %programs% refers to the liteway programs dir, and %settings% refers to the liteway settings dir.
+
+--update-url http://example.com/myapp.lua
+A location from which to fetch the latest version of the file.
+
+--external-file path/to/file http://example.com/myfile.lua
+A path to a file to download along with this file.
+
+--update-command %filename% update
+A command to run when updating. Runs in the same directory as the file. %filename% refers to the name of the file, in case it is installed under a different name. Note: The order of --update-command and --update-url is important. If --update-url appears after --update-command, the update command will be run before updating. If --update-url appears before the --update-command tag in a file, then only the update command (if any) in the updated version of the file will be run, after the file has been updated.
+
+--uninstall-command %filename% uninstall
+A command to run when the uninstall command is issued. The program and its external files will be deleted after this command is run.
