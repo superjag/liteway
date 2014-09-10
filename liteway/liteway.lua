@@ -117,7 +117,7 @@ end
 --
 -- Load Additional Libraries
 --
-print("1:"..liteway)
+print("1:"..tostring(liteway))
 
 local libs = {
  "backgroundevents",
