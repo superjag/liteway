@@ -245,11 +245,11 @@ local turtle_right = turtle.right
 local turtle_refuel = turtle.refuel
 
 local location = {
- x:0,
- y:0,
- z:0,
- xDir:0,
- zDir:-1
+ x = 0,
+ y = 0,
+ z = 0,
+ xDir = 0,
+ zDir = -1
 }
 
 local function saveCoords(movement)
