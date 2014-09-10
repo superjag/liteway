@@ -12,3 +12,6 @@ A command to run when updating. Runs in the same directory as the file. %filenam
 
 --uninstall-command %filename% uninstall
 A command to run when the uninstall command is issued. The program and its external files will be deleted after this command is run.
+
+Command tag example that cancels an update if no new versions are available:
+--update-command lua if http.get("http://example.com/currentversion.txt").readLine()=="1.0" then liteway.cancelUpdate("No newer version available") end

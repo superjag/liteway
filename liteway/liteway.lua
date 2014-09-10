@@ -58,21 +58,32 @@ if not fs.exists(settingsDir) then
 end
 liteway.settingsDir = settingsDir
 
--- Saves a string to the computer's filesystem so it can be loaded later with loadSettings().
+-- Saves a string or table to the computer's filesystem so it can be loaded later with loadSettings().
 -- Always begin the name with the name of your app to prevent conflicts!
 -- e.g. liteway.saveSettings("myapp-settings", str)
 liteway.saveSettings = function (name, str)
- local file = fs.open(fs.combine(settingsDir, filename),"w")
+ if str==nil then
+  liteway.deleteSettings(name)
+ end
+ str = textutils.serialize(str)
+ local file = fs.open(fs.combine(settingsDir, name),"w")
  file.write(str)
  file.close()
 end
 
--- Returns a string saved with saveSettings(), or nil if no settings with that name exists.
+-- Returns a string or table saved with saveSettings(), or nil if no settings with that name exists.
 liteway.loadSettings = function (name)
- local file = fs.open(fs.combine(settingsDir, filename),"r")
+ if not file.exists(name) then
+  return nil
+ end
+ local file = fs.open(fs.combine(settingsDir, name),"r")
  local str = file.readAll()
  file.close()
- return str
+ return textutils.unserialize(str)
+end
+
+liteway.deleteSettings = function (name)
+ fs.delete(fs.combine(settingsDir, name))
 end
 
 --
@@ -109,6 +120,7 @@ end
 
 local libs = {
  "backgroundevents",
+ "navstar",
  "stringfunctions",
  "programs/turtlescript"
 }
