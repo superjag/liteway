@@ -254,14 +254,14 @@ local location = {
 
 local function saveCoords(movement)
  liteway.saveSettings("navstar-location", {
-  location:location,
-  fuel:turtle.getFuelLevel(),
-  move:movement
+  location = location,
+  fuel = turtle.getFuelLevel(),
+  move = movement
  })
 end
 
 turtle.forward = function (...)
- saveCoords({x:location.xDir, y:0, z:location.zDir})
+ saveCoords({x = location.xDir, y = 0, z = location.zDir})
  if turtle_forward(...) then
   location.x = location.x+location.xDir
   location.z = location.z+location.zDir
@@ -270,7 +270,7 @@ turtle.forward = function (...)
 end
 
 turtle.back = function (...)
- saveCoords({x:-location.xDir, y:0, z:-location.zDir})
+ saveCoords({x = -location.xDir, y = 0, z = -location.zDir})
  if turtle_back(...) then
   location.x = location.x-location.xDir
   location.z = location.z-location.zDir
@@ -279,7 +279,7 @@ turtle.back = function (...)
 end
 
 turtle.up = function (...)
- saveCoords({x:0, y:1, z:0})
+ saveCoords({x = 0, y = 1, z = 0})
  if turtle_up(...) then
   location.y = location.y+1
  end
@@ -287,7 +287,7 @@ turtle.up = function (...)
 end
 
 turtle.down = function (...)
- saveCoords({x:0, y:-1, z:0})
+ saveCoords({x = 0, y = -1, z = 0})
  if turtle_down(...) then
   location.y = location.y-1
  end
