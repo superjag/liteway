@@ -2,7 +2,9 @@
 
 --Always load as API
 if shell then
- error("The NavStar API must be loaded with os.loadAPI()")
+ --error("The NavStar API must be loaded with os.loadAPI()")
+ os.loadAPI(shell.getRunningProgram())
+ return
 end
 
 --
