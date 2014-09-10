@@ -314,6 +314,7 @@ end
 --
 -- Restore coords on reboot
 --
+print("2:"..liteway)
 
 local loadedCoords = liteway.loadSettings("navstar-location")
 if loadedCoords then
