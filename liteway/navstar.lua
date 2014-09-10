@@ -19,10 +19,10 @@ local location = navstar.getLocation(origin)
 function getLocation(origin)
  if origin==nil then
   return {
-   x:location.x,
-   y:location.y,
-   z:location.z,
-   f:getDirectionFacing()
+   x = location.x,
+   y = location.y,
+   z = location.z,
+   f = getDirectionFacing()
   }
  else
   local globalX = origin.x+location.x
@@ -32,31 +32,31 @@ function getLocation(origin)
   local facingOffset = tostring(origin.f):upper()
   if facingOffset=="N" then
    return {
-    x:globalX,
-    y:globalY,
-    z:globalZ,
-    f:facing
+    x = globalX,
+    y = globalY,
+    z = globalZ,
+    f = facing
    }
   elseif facingOffset=="E" then
    return {
-    x:globalZ,
-    y:globalY,
-    z:-globalX,
-    f:facing
+    x = globalZ,
+    y = globalY,
+    z = -globalX,
+    f = facing
    }
   elseif facingOffset=="S" then
    return {
-    x:-globalX,
-    y:globalY,
-    z:-globalZ,
-    f:facing
+    x = -globalX,
+    y = globalY,
+    z = -globalZ,
+    f = facing
    }
   else --facingOffset=="W"
    return {
-    x:-globalZ,
-    y:globalY,
-    z:globalX,
-    f:facing
+    x = -globalZ,
+    y = globalY,
+    z = globalX,
+    f = facing
    }
   end
  end
@@ -104,10 +104,10 @@ function setOrigin(offset)
    facingOffset = "E"
   end
   return {
-   x:offsetCopy.x-location.x,
-   y:offsetCopy.y-location.y,
-   z:offsetCopy.z-location.z,
-   f:facingOffset
+   x = offsetCopy.x-location.x,
+   y = offsetCopy.y-location.y,
+   z = offsetCopy.z-location.z,
+   f = facingOffset
   }
   
  elseif offsetCopy.f=="E" then
@@ -121,10 +121,10 @@ function setOrigin(offset)
    facingOffset = "S"
   end
   return {
-   x:offsetCopy.z-location.x,
-   y:offsetCopy.y-location.y,
-   z:-offsetCopy.x-location.z,
-   f:facingOffset
+   x = offsetCopy.z-location.x,
+   y = offsetCopy.y-location.y,
+   z = -offsetCopy.x-location.z,
+   f = facingOffset
   }
   
  elseif offsetCopy.f=="S" then
@@ -138,10 +138,10 @@ function setOrigin(offset)
    facingOffset = "W"
   end
   return {
-   x:-offsetCopy.x-location.x,
-   y:offsetCopy.y-location.y,
-   z:-offsetCopy.z-location.z,
-   f:facingOffset
+   x = -offsetCopy.x-location.x,
+   y = offsetCopy.y-location.y,
+   z = -offsetCopy.z-location.z,
+   f = facingOffset
   }
   
  else --offsetCopy.f=="W"
@@ -155,10 +155,10 @@ function setOrigin(offset)
    facingOffset = "N"
   end
   return {
-   x:-offsetCopy.z-location.x,
-   y:offsetCopy.y-location.y,
-   z:offsetCopy.x-location.z,
-   f:facingOffset
+   x = -offsetCopy.z-location.x,
+   y = offsetCopy.y-location.y,
+   z = offsetCopy.x-location.z,
+   f = facingOffset
   }
   
  end
