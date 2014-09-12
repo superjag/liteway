@@ -120,9 +120,10 @@ end
 print("1:"..tostring(liteway))
 
 local libs = {
- "backgroundevents",
- "navstar",
  "stringfunctions",
+ "backgroundevents",
+ "rhinoresume",
+ --"navstar",
  "programs/turtlescript"
 }
 
