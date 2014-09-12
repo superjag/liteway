@@ -104,7 +104,7 @@ function fileTracker(path, allowResume)
   file = fs.open(path, "w")
  end
  
- local tracker = customResumeTracker(
+ local tracker = customTracker(
   function (data)
    if disposed then
     return
