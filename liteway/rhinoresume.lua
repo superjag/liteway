@@ -48,6 +48,7 @@ function customTracker(streamWriteFunction, resumeState)
     end
    end
    resumeTable[name] = proxy
+   print(name.." = "..tostring(func))
    return proxy
    
   elseif type(func)=="table" then
