@@ -31,7 +31,7 @@ string.index = function (str, chars, fromIndex)
  if fromIndex > 0 then
   
   for i = fromIndex, str:len()-charsLenOffset, 1 do
-   if str:sub(i, i+charsLenOffset)==chars then
+   if str:sub(i, i+charsLenOffset)..""==chars then
     return i
    end
   end
