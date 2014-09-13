@@ -105,10 +105,10 @@ function fileTracker(path, allowResume)
    end
   end
   
-  file = fs.open(path, "a")
-  
  else
   file = fs.open(path, "w")
+  file.write("")
+  file.close()
  end
  
  local tracker = customTracker(
@@ -116,9 +116,10 @@ function fileTracker(path, allowResume)
    if disposed then
     return
    end
+   file = fs.open(path, "a")
    file.write(data:len().."\n")
    file.write(data.."\n")
-   file.flush()
+   file.close()
   end,
   resumeState
  )
@@ -128,7 +129,6 @@ function fileTracker(path, allowResume)
     return
    end
   disposed = true
-  file.close()
   fs.delete(path)
  end
  
