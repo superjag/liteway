@@ -91,7 +91,11 @@ function fileTracker(path, allowResume)
   local data = file.readAll()
   file.close()
   
-  local i = 1
+  if data:sub(1, 12):lower()~="rhinoresume\n" then
+   error(path.." does not appear to be a rhinoresume file")
+  end
+  
+  local i = 13
   while i < data:len() do
    local length = data:sub(i, data:index("\n", i)-1)
    i = i+length:len()+1
@@ -106,9 +110,20 @@ function fileTracker(path, allowResume)
   end
   
  else
+  
+  if fs.exists(path) then
+   file = fs.open(path, "r")
+   local firstLine = file.readLine()
+   file.close()
+   if firstLine:lower()~="rhinoresume" then
+    error(path.." does not appear to be a rhinoresume file")
+   end
+  end
+  
   file = fs.open(path, "w")
-  file.write("")
+  file.write("rhinoresume\n")
   file.close()
+  
  end
  
  local tracker = customTracker(
