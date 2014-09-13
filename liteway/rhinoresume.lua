@@ -15,7 +15,7 @@ function customTracker(streamWriteFunction, resumeState)
   error("resumeState must be a table array")
  end
  
- local resumeStatePointer = 0
+ local resumeStatePointer = 1
  local resumeTable
  
  local function add (name, func)
@@ -31,24 +31,30 @@ function customTracker(streamWriteFunction, resumeState)
   end
   
   if type(func)=="function" then
+   
    if name=="" then
     error("name required")
    end
    if resumeTable[name] then
     error("a resumable function named "..name.." already exists")
    end
+   
    local function proxy(...)
-    if resumeStatePointer >= #resumeState then
+    if resumeStatePointer > #resumeState then
      local value = func(...)
      streamWriteFunction(textutils.serialize({f = name, r = value}))
      return value
     else
+     local resumeValue = textutils.unserialize(resumeState[resumeStatePointer])
+     if resumeValue.f~=name then
+      error("Resume call out of order: expected "..resumeValue.f.."(), but "..name.."() called")
+     end
      resumeStatePointer = resumeStatePointer+1
-     return textutils.unserialize(resumeState[resumeStatePointer])
+     return resumeValue.r
     end
    end
+   
    resumeTable[name] = proxy
-   print(name.." = "..tostring(func))
    return proxy
    
   elseif type(func)=="table" then
