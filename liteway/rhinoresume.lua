@@ -53,7 +53,7 @@ function customTracker(streamWriteFunction, resumeState)
    
   elseif type(func)=="table" then
    for key,value in pairs(func) do
-    if type(value)==func then
+    if type(value)=="function" then
      add(name..tostring(key), value)
     end
    end
