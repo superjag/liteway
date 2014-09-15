@@ -54,7 +54,7 @@ function customTracker(streamWriteFunction, resumeState)
     else
      resumeStatePointer = resumeStatePointer+1
      if resumeState[resumeStatePointer]~=name then
-      error("Resume call out of order: expected "..resumeValue.f.."(), but "..name.."() called")
+      error("Resume call out of order: expected "..resumeState[resumeStatePointer].."(), but "..name.."() called")
      end
      resumeStatePointer = resumeStatePointer+1
      if resumeStatePointer < #resumeState then
