@@ -15,7 +15,7 @@ function customTracker(streamWriteFunction, resumeState)
   error("resumeState must be a table array")
  end
  
- local resumeStatePointer = 1
+ local resumeStatePointer = 0
  local resumeTable
  
  local function add (name, func)
@@ -40,17 +40,36 @@ function customTracker(streamWriteFunction, resumeState)
    end
    
    local function proxy(...)
-    if resumeStatePointer > #resumeState then
-     local value = func(...)
-     streamWriteFunction(textutils.serialize({f = name, r = value}))
+    if resumeStatePointer >= #resumeState then
+     streamWriteFunction(name)
+     local value
+     local replacer = __replace[func]
+     if replacer then
+      value = replacer(false, resumeTable, ...)
+     else
+      value = func(...)
+     end
+     streamWriteFunction(textutils.serialize(value))
      return value
     else
-     local resumeValue = textutils.unserialize(resumeState[resumeStatePointer])
-     if resumeValue.f~=name then
+     resumeStatePointer = resumeStatePointer+1
+     if resumeState[resumeStatePointer]~=name then
       error("Resume call out of order: expected "..resumeValue.f.."(), but "..name.."() called")
      end
      resumeStatePointer = resumeStatePointer+1
-     return resumeValue.r
+     if resumeStatePointer < #resumeState then
+      return textutils.unserialize(resumeState[resumeStatePointer])
+     else
+      local replacer = __replace[func]
+      if replacer then
+       local value = replacer(true, resumeTable)
+       streamWriteFunction(textutils.serialize(value))
+       return value
+      else
+       streamWriteFunction(textutils.serialize(nil))
+       return nil
+      end
+     end
     end
    end
    
@@ -73,7 +92,11 @@ function customTracker(streamWriteFunction, resumeState)
  resumeTable = {
   add = add
  }
- resumeTable.add("args", function (...) return ... end)
+ 
+ local function args (...)
+  return ...
+ end
+ resumeTable.add("args", args)
  
  return resumeTable
  
@@ -149,4 +172,37 @@ function fileTracker(path, allowResume)
  
  return tracker
  
+end
+
+__replace = {}
+
+local function addReplacement(forFunc)
+ __replace[forFunc] = function (resuming, tracker, ...)
+  local fuel = tracker.args(turtle.getFuelLevel())
+  if resuming then
+   local currentFuel = turtle.getFuelLevel()
+   if currentFuel==fuel then
+    return forFunc()
+   elseif currentFuel==fuel-1 then
+    return true
+   else
+    error("Fuel-based movement tracking failed")
+   end
+  else
+   return forFunc()
+  end
+ end
+end
+
+addReplacement(turtle.forward)
+addReplacement(turtle.back)
+addReplacement(turtle.up)
+addReplacement(turtle.down)
+
+local function copyTable(t)
+ local r = {}
+ for key,value in pairs(func) do
+  r[key] = value
+ end
+ return r
 end
