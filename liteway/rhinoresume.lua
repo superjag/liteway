@@ -227,6 +227,30 @@ function fileTracker(path, allowResume)
  
 end
 
+--
+-- String Compare
+--
+
+-- Compares two strings case-insensitively
+-- Has absolutely nothing to do with resume functionality; it is intended to be used in conjunction with fileTracker():
+-- local tracker = rhinoresume.fileTracker("resume.progress", rhinoresume.stringCompare("resume", ...))
+function stringCompare(str1, str2, arg3)
+ if type(str1)~="string" or type(str2)~="string" then
+  return false
+ end
+ if str1:lower()==str2:lower() then
+  if arg3~=nil then
+   error("Too many arguments")
+  end
+  return true
+ end
+ return false
+end
+
+--
+-- Default replacements
+--
+
 __replace = {}
 
 local function addReplacement(forFunc)
