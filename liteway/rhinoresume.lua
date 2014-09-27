@@ -6,6 +6,7 @@ if shell then
  return
 end
 
+
 function customTracker(streamWriteFunction, resumeState)
  
  if resumeState==nil then
@@ -41,7 +42,10 @@ function customTracker(streamWriteFunction, resumeState)
    
    local function proxy(...)
     if resumeStatePointer >= #resumeState then
-     streamWriteFunction(name)
+     
+     -- call function and record it in the resume state
+     
+     streamWriteFunction("~"..name)
      local value
      local replacer = __replace[func]
      if replacer then
@@ -49,27 +53,71 @@ function customTracker(streamWriteFunction, resumeState)
      else
       value = func(...)
      end
-     streamWriteFunction(textutils.serialize(value))
+     streamWriteFunction("="..textutils.serialize(value))
      return value
+     
     else
+     
+     -- ignore function call while resuming
+     
+     local function skipRecursiveCall()
+      if resumeStatePointer <= #resumeState and resumeState[resumeStatePointer]:sub(1,1)=="~" then
+       resumeStatePointer = resumeStatePointer+1
+       while skipRecursiveCall() do
+        resumeStatePointer = resumeStatePointer+1
+       end
+       return true
+      else
+       return false
+      end
+     end
+     
      resumeStatePointer = resumeStatePointer+1
-     if resumeState[resumeStatePointer]~=name then
+     if resumeState[resumeStatePointer]~="~"..name then
       error("Resume call out of order: expected "..resumeState[resumeStatePointer].."(), but "..name.."() called")
      end
-     resumeStatePointer = resumeStatePointer+1
+     
+     local startPointer = resumeStatePointer
+     skipRecursiveCall()
+     
+     if resumeStatePointer <= #resumeState then
+      if resumeState[resumeStatePointer]:sub(1,1)~="=" then
+       error("Internal rhinoresume error: Unmatched return value encountered in resume stream.")
+      end
+      return textutils.unserialize(resumeState[resumeStatePointer]:sub(2).."")
+     else
+      local replacer = __replace[func]
+      if replacer then
+       resumeStatePointer = startPointer+1
+       local value = replacer(true, resumeTable)
+       if resumeStatePointer < #resumeState then
+        error("Recursive resume call not called")
+       end
+       streamWriteFunction("="..textutils.serialize(value))
+       return value
+      else
+       streamWriteFunction("="..textutils.serialize(nil))
+       return nil
+      end
+     end
+     
+     
+     
+     
      if resumeStatePointer < #resumeState then
-      return textutils.unserialize(resumeState[resumeStatePointer])
+      return textutils.unserialize(resumeState[resumeStatePointer]:sub(2).."")
      else
       local replacer = __replace[func]
       if replacer then
        local value = replacer(true, resumeTable)
-       streamWriteFunction(textutils.serialize(value))
+       streamWriteFunction("="..textutils.serialize(value))
        return value
       else
-       streamWriteFunction(textutils.serialize(nil))
+       streamWriteFunction("="..textutils.serialize(nil))
        return nil
       end
      end
+     
     end
    end
    
@@ -101,6 +149,11 @@ function customTracker(streamWriteFunction, resumeState)
  return resumeTable
  
 end
+
+
+--
+-- File Tracker (wrapper function)
+--
 
 function fileTracker(path, allowResume)
 
@@ -178,9 +231,9 @@ __replace = {}
 
 local function addReplacement(forFunc)
  __replace[forFunc] = function (resuming, tracker, ...)
-  local fuel = tracker.args(turtle.getFuelLevel())
+  local currentFuel = turtle.getFuelLevel()
+  local fuel = tracker.args(currentFuel)
   if resuming then
-   local currentFuel = turtle.getFuelLevel()
    if currentFuel==fuel then
     return forFunc()
    elseif currentFuel==fuel-1 then
