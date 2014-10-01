@@ -1,6 +1,6 @@
 --name turtlescript
 
-local version = "TurtleScript 0.2"
+local version = "TurtleScript 0.3"
 local args = {...}
 local firstProgram = true
 
@@ -141,6 +141,18 @@ while instructions[i]~=nil do
   
  -- Sucking Items
  elseif instruction[1]=="suck" then
+  --selectSlot(instruction)
+  turtle.select(1)
+  if instruction[2]=="above" or instruction[2]=="up" or instruction[2]=="u" or instruction[3]=="above" or instruction[3]=="up" or instruction[3]=="u" then
+   turtle.suckUp()
+  elseif instruction[2]=="below" or instruction[2]=="down" or instruction[2]=="d" or instruction[3]=="below" or instruction[3]=="down" or instruction[3]=="d" then
+   turtle.suckDown()
+  else
+   turtle.suck()
+  end
+  
+ -- Suck All Items (not just a stack)
+ elseif instruction[1]=="loot" then
   selectSlot(instruction)
   if instruction[2]=="above" or instruction[2]=="up" or instruction[2]=="u" or instruction[3]=="above" or instruction[3]=="up" or instruction[3]=="u" then
    while turtle.suckUp() do end
