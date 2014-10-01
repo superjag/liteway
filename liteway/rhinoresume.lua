@@ -21,6 +21,11 @@ function customTracker(streamWriteFunction, resumeState)
  
  local function add (name, func)
   
+  if type(func)=="string" then
+   local swap = name
+   name = func
+   func = swap
+  end
   if func==nil then
    func = name
    name = ""
@@ -125,11 +130,14 @@ function customTracker(streamWriteFunction, resumeState)
    return proxy
    
   elseif type(func)=="table" then
+   
+   local addedItems = {}
    for key,value in pairs(func) do
     if type(value)=="function" then
-     add(name..tostring(key), value)
+     addedItems[key] = add(name..key, value)
     end
    end
+   return addedItems
    
   else
    error("Type error: add() accepts a function or table")

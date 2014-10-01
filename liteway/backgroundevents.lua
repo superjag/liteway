@@ -1,11 +1,11 @@
---name liteway/apis/background-events
+--name background-events
 
 local asyncListeners = {}
 local osPullEventRaw = os.pullEventRaw
 
-os.pullEventRaw = function (eventName)
+os.pullEventRaw = function (eventName, ...)
  while true do
-  local result = {osPullEventRaw()}
+  local result = {osPullEventRaw(eventName, ...)}
   local listeners = asyncListeners[result[1]]
   if listeners~=nil then
    local i
