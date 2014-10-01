@@ -3,9 +3,12 @@
 local asyncListeners = {}
 local osPullEventRaw = os.pullEventRaw
 
-os.pullEventRaw = function (eventName, ...)
+os.pullEventRaw = function (eventName)
  while true do
-  local result = {osPullEventRaw(eventName, ...)}
+  local result = {osPullEventRaw()}
+  if eventName~=nil and eventName~="terminate" and result[1] == "terminate" then
+   error("Terminated", 0)
+  end
   local listeners = asyncListeners[result[1]]
   if listeners~=nil then
    local i
