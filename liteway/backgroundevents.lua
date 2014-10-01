@@ -5,20 +5,31 @@ local osPullEventRaw = os.pullEventRaw
 
 os.pullEventRaw = function (eventName)
  while true do
+  
   local result = {osPullEventRaw()}
-  if eventName~=nil and eventName~="terminate" and result[1] == "terminate" then
-   error("Terminated", 0)
-  end
   local listeners = asyncListeners[result[1]]
+  
   if listeners~=nil then
+   
+   local terminateAfterEvent = false
    local i
    for i = 1, #listeners, 1 do
-    listeners[i](unpack(result))
+    if listeners[i](unpack(result)) then
+     terminateAfterEvent = true
+    end
    end
+   if terminateAfterEvent and result[1] == "terminate" then
+    error("Terminated", 0)
+   end
+   
+  elseif eventName~=nil and eventName~="terminate" and result[1] == "terminate" then
+   error("Terminated", 0)
   end
+  
   if eventName==nil or eventName==result[1] then
    return unpack(result)
   end
+  
  end
 end
 
