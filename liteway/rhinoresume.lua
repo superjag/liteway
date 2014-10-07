@@ -181,7 +181,7 @@ function fileTracker(path, allowResume)
   
   local i = 13
   while i < data:len() do
-   local length = data:sub(i, data:index("\n", i)-1)
+   local length = data:sub(i, string.index(data, "\n", i)-1)
    i = i+length:len()+1
    length = tonumber(length)
    if length > 0 then
