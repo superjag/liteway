@@ -39,8 +39,8 @@ end
 turtlescript.run = function (script)
 
 local instructions = {}
-local labels = {}
 local loopCounters = {}
+local labels = {}
 local stack = {}
 local i
 
@@ -110,8 +110,31 @@ if firstProgram then
  firstProgram = false
 end
 
+local rhino = turtle
+local resumeFilename = nil
+
+function setupResume(resumeFilename, allowResume)
+ if rhinoresume==nil then
+  error("RhinoResume not found: Did you install liteway?")
+ end
+ rhino = rhinoresume.fileTracker(resumeFilename, allowResume)
+ rhino.add("parameters", function (...)
+  return ...
+ end)
+ offset = rhino.parameters(offset)
+ local slot = rhino.parameters(turtle.getSelectedSlot())
+ if turtle.getSelectedSlot() ~= slot then
+  turtle.select(slot)
+ end
+ stack = {rhino.parameters(table.unpack(stack))}
+ i = rhino.parameters(i)
+end
+
 i = 1
 while instructions[i]~=nil do
+ if resumeFilename ~= nil then
+  setupResume(resumeFilename, false)
+ end
  local instruction = instructions[i]
  
  -- Movement
@@ -352,6 +375,17 @@ while instructions[i]~=nil do
     end
    end
   end
+  
+ -- Resume
+ elseif instruction[1]=="resume" then
+  if instruction[2]==nil then
+   error("Resume filename required")
+  end
+  resumeFilename = instruction[2]
+  if resumeFilename:sub(#resumeFilename-6):upper()~=".RESUME" then
+   resumeFilename = resumeFilename..".RESUME"
+  end
+  setupResume(resumeFilename, true)
   
  -- Wait
  elseif instruction[1]=="wait" then
