@@ -407,7 +407,11 @@ for i = 1, #tree, 1 do
    fs.delete("liteway/installer")
    error("Failed downloading "..tree[i].path)
   end
-  local file = fs.open("liteway/installer"..tree[i].path:sub(8), "w")
+  local filename = tree[i].path:sub(8)
+  if filename:sub(#filename - 3):lower() == ".lua" then
+   filename = filename:sub(1, #filename - 4)
+  end
+  local file = fs.open("liteway/installer"..filename, "w")
   file.write(request.readAll())
   file.close()
   request.close()
