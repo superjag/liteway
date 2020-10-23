@@ -5,6 +5,8 @@ end
 local rawTree = request.readAll()
 request.close()
 
+print("Downloading liteway...")
+
 --
 -- json.lua
 --
@@ -431,3 +433,18 @@ for i = 1, #newFiles, 1 do
 end
 
 fs.delete("liteway/installer")
+
+local contents = ""
+if fs.exists("startup") then
+ local startup = fs.open("startup")
+ contents = startup.readAll()
+ startup.close()
+end
+if contents:find("os.execute('liteway/liteway')", 1, true) == nil then
+ local startup = fs.open("startup", fs.exists("startup") and "a" or "w")
+ startup.write("\n\n-- Initialize liteway\nos.execute('liteway/liteway');\n\n")
+ startup.close()
+end
+
+print("Download complete\nRestart your computer to boot into liteway")
+ 
