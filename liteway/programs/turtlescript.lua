@@ -4,8 +4,10 @@ local version = "TurtleScript 0.4"
 local args = {...}
 local firstProgram = true
 
-if turtlescript==nil then
- getfenv().turtlescript = {}
+local turtlescript = {}
+
+if os.liteway~=nil and os.liteway.turtlescript==nil then
+ os.liteway.turtlescript = turtlescript
 end
 
 local performAction = function (action,iterations,errorMsg,...)
