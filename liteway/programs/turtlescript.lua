@@ -113,7 +113,14 @@ end
 local rhino = turtle
 local resumeFilename = nil
 
-function setupResume(resumeFilename, allowResume)
+function setupResume(filename, allowResume)
+ if resumeFilename~=nil then
+  fs.delete(resumeFilename)
+ end
+ resumeFilename = filename
+ if filename==nil then
+  return
+ end
  if rhinoresume==nil then
   error("RhinoResume not found: Did you install liteway?")
  end
@@ -378,14 +385,14 @@ while instructions[i]~=nil do
   
  -- Resume
  elseif instruction[1]=="resume" then
-  if instruction[2]==nil then
-   error("Resume filename required")
+  setupResume()
+  if instruction[2]~=nil then
+   local filename = instruction[2]
+   if filename:sub(#filename-6):upper()~=".RESUME" then
+    filename = filename..".RESUME"
+   end
+   setupResume(filename, true)
   end
-  resumeFilename = instruction[2]
-  if resumeFilename:sub(#resumeFilename-6):upper()~=".RESUME" then
-   resumeFilename = resumeFilename..".RESUME"
-  end
-  setupResume(resumeFilename, true)
   
  -- Wait
  elseif instruction[1]=="wait" then
@@ -429,6 +436,8 @@ while instructions[i]~=nil do
  end
  i = i+1
 end
+
+setupResume()
 
 end
 
