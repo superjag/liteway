@@ -246,10 +246,7 @@ function stringCompare(str1, str2, arg3)
  if type(str1)~="string" or type(str2)~="string" then
   return false
  end
- if str1:lower()==str2:lower() then
-  if arg3~=nil then
-   error("Too many arguments")
-  end
+ if str1:lower()==str2:lower() and arg3==nil then
   return true
  end
  return false
