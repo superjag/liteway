@@ -440,7 +440,7 @@ fs.delete("liteway/installer")
 
 local contents = ""
 if fs.exists("startup") then
- local startup = fs.open("startup")
+ local startup = fs.open("startup", "r")
  contents = startup.readAll()
  startup.close()
 end
