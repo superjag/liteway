@@ -404,19 +404,23 @@ fs.delete("liteway/installer")
 local i
 for i = 1, #tree, 1 do
  if tree[i].path:sub(1, 8) == "liteway/" then
-  local request = http.get("https://raw.githubusercontent.com/superjag/liteway/master/"..tree[i].path)
-  if request == nil then
-   fs.delete("liteway/installer")
-   error("Failed downloading "..tree[i].path)
+  if tree[i].type == "blob" then
+   local request = http.get("https://raw.githubusercontent.com/superjag/liteway/master/"..tree[i].path)
+   if request == nil then
+    fs.delete("liteway/installer")
+    error("Failed downloading "..tree[i].path)
+   end
+   local filename = tree[i].path:sub(8)
+   if filename:sub(#filename - 3):lower() == ".lua" then
+    filename = filename:sub(1, #filename - 4)
+   end
+   local file = fs.open("liteway/installer"..filename, "w")
+   file.write(request.readAll())
+   file.close()
+   request.close()
+  elseif tree[i].type == "tree" then
+   fs.makeDir("liteway/installer"..tree[i].path:sub(8))
   end
-  local filename = tree[i].path:sub(8)
-  if filename:sub(#filename - 3):lower() == ".lua" then
-   filename = filename:sub(1, #filename - 4)
-  end
-  local file = fs.open("liteway/installer"..filename, "w")
-  file.write(request.readAll())
-  file.close()
-  request.close()
  end
 end
 
