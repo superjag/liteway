@@ -55,12 +55,13 @@ if not shell then
 end
 
 -- Only initialize once
-if isaac then
+if os.liteway.isaac then
  print("Isaac API is already loaded")
  return
 end
 
-getfenv().isaac = {}
+local isaac = {}
+os.liteway.isaac = isaac
 isaac.__index = isaac
  
 function isaac.create(initialSeed)
