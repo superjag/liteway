@@ -17,8 +17,8 @@ local liteway = {}
 os.liteway = liteway
 
 -- Version information
-liteway.versionName = "Liteway 1.0"
-liteway.version = 1.0
+liteway.versionName = "Liteway 1.1"
+liteway.version = 1.1
  
 -- Temporary storage space for use by apps. Data persists across app restarts, but is deleted when the computer restarts.
 liteway.temp = {}
