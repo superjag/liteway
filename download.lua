@@ -444,9 +444,9 @@ if fs.exists("startup") then
  contents = startup.readAll()
  startup.close()
 end
-if contents:find("os.execute('liteway/liteway')", 1, true) == nil then
+if contents:find("shell.run('liteway/liteway')", 1, true) == nil then
  local startup = fs.open("startup", fs.exists("startup") and "a" or "w")
- startup.write("\n\n-- Initialize liteway\nos.execute('liteway/liteway');\n\n")
+ startup.write("\n\n-- Initialize liteway\nshell.run('liteway/liteway');\n\n")
  startup.close()
 end
 
