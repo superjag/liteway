@@ -33,7 +33,7 @@ os.pullEventRaw = function (eventName)
  end
 end
 
-liteway.pullEventAsync = function (callback, ...)
+os.liteway.pullEventAsync = function (callback, ...)
  local args = {...}
  local i
  local j
@@ -63,7 +63,7 @@ liteway.pullEventAsync = function (callback, ...)
  return true
 end
  
-liteway.unpullEvent = function (callback, ...)
+os.liteway.unpullEvent = function (callback, ...)
  local args = {...}
  local i
  local j
@@ -89,7 +89,7 @@ liteway.unpullEvent = function (callback, ...)
  end
 end
 
-os.pullEventAsync = liteway.pullEventAsync
-liteway.unpullEventAsync = liteway.unpullEvent
-os.unpullEvent = liteway.unpullEvent
-os.unpullEventAsync = liteway.unpullEvent
+os.pullEventAsync = os.liteway.pullEventAsync
+os.liteway.unpullEventAsync = os.liteway.unpullEvent
+os.unpullEvent = os.liteway.unpullEvent
+os.unpullEventAsync = os.liteway.unpullEvent
