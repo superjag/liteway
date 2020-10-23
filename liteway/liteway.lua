@@ -7,13 +7,14 @@ if not shell then
 end
 
 -- Only initialize once
-if liteway then
- print(liteway.versionName.." is already running")
+if os.liteway then
+ print(os.liteway.versionName.." is already running")
  return
 end
  
 -- Create the global liteway object
-liteway = {}
+local liteway = {}
+os.liteway = liteway
 
 -- Version information
 liteway.versionName = "Liteway 1.0"
