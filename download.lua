@@ -429,7 +429,7 @@ end
 
 local newFiles = fs.list("liteway/installer")
 for i = 1, #newFiles, 1 do
- fs.move("liteway/installer/"..newFiles[i], liteway/"..newFiles[i])
+ fs.move("liteway/installer/"..newFiles[i], "liteway/"..newFiles[i])
 end
 
 fs.delete("liteway/installer")
