@@ -13,7 +13,7 @@ if liteway then
 end
  
 -- Create the global liteway object
-getfenv().liteway = {}
+liteway = {}
 
 -- Version information
 liteway.versionName = "Liteway 1.0"
