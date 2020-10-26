@@ -450,7 +450,9 @@ if contents:find("shell.run('liteway/liteway')", 1, true) == nil then
  startup.close()
 end
 
+print("Download complete")
+
 shell.run("set motd.enable false")
 
-print("Download complete\nRestart your computer to boot into liteway")
+print("Restart to boot into liteway")
  
